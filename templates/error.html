@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Analytics - Error</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .error-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            padding: 40px;
+            text-align: center;
+            max-width: 600px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .error-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+        
+        .error-title {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        
+        .error-message {
+            color: #7f8c8d;
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .help-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 20px;
+            text-align: left;
+        }
+        
+        .help-title {
+            color: #2c3e50;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .help-steps {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .help-steps li {
+            padding: 8px 0;
+            color: #555;
+            border-left: 3px solid #667eea;
+            padding-left: 15px;
+            margin: 10px 0;
+        }
+        
+        .code-snippet {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+        
+        .retry-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1em;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+            transition: transform 0.3s ease;
+        }
+        
+        .retry-button:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <div class="error-icon">⚠️</div>
+        <h1 class="error-title">Oops! Data File Missing</h1>
+        <p class="error-message">{{ error_message }}</p>
+        
+        <div class="help-section">
+            <h3 class="help-title">🔧 How to Fix This:</h3>
+            <ul class="help-steps">
+                <li>Make sure you have a file named <strong>network_data.csv</strong> in the same folder as your Flask app</li>
+                <li>The CSV should have these columns: Source IP, Destination IP, Protocol, Packet Size</li>
+                <li>Here's a sample CSV format:</li>
+            </ul>
+            
+            <div class="code-snippet">
+Source IP,Destination IP,Protocol,Packet Size<br>
+192.168.1.1,10.0.0.1,TCP,1024<br>
+10.0.0.2,192.168.1.5,UDP,512<br>
+172.16.0.1,8.8.8.8,ICMP,64
+            </div>
+            
+            <ul class="help-steps">
+                <li>Save the file and refresh this page</li>
+                <li>If you're still having issues, check that the file path is correct</li>
+            </ul>
+        </div>
+        
+        <a href="/" class="retry-button">🔄 Try Again</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Analytics Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .header p {
+            color: #7f8c8d;
+            font-size: 1.2em;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transform: translateY(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .charts-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .chart-section {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .chart-title {
+            font-size: 1.5em;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .chart-img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+        
+        .summary-section {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+        
+        .summary-title {
+            font-size: 1.8em;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        .protocol-list, .ip-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .protocol-list li, .ip-list li {
+            padding: 10px;
+            margin: 5px 0;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .protocol-name, .ip-address {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .protocol-count, .ip-count {
+            background: #667eea;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        
+        @media (max-width: 768px) {
+            .charts-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #ecf0f1;
+            color: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌐 Network Analytics Dashboard</h1>
+            <p>Real-time network traffic analysis and monitoring</p>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">{{ stats.total_packets }}</div>
+                <div class="stat-label">Total Packets</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ "%.1f"|format(stats.avg_packet_size) }}</div>
+                <div class="stat-label">Avg Packet Size (bytes)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ stats.protocol_counts|length }}</div>
+                <div class="stat-label">Protocols Detected</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ stats.top_ips|length }}</div>
+                <div class="stat-label">Top Active IPs</div>
+            </div>
+        </div>
+        
+        <div class="charts-container">
+            <div class="chart-section">
+                <h2 class="chart-title">📊 Protocol Distribution</h2>
+                <img src="data:image/png;base64,{{ protocol_chart }}" alt="Protocol Distribution Chart" class="chart-img">
+            </div>
+            
+            <div class="chart-section">
+                <h2 class="chart-title">🏆 Top 3 Active IPs</h2>
+                <img src="data:image/png;base64,{{ ip_chart }}" alt="Top IPs Chart" class="chart-img">
+            </div>
+        </div>
+        
+        <div class="summary-section">
+            <h2 class="summary-title">📋 Detailed Analysis</h2>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 20px;">
+                <div>
+                    <h3 style="color: #2c3e50; margin-bottom: 15px;">Protocol Breakdown:</h3>
+                    <ul class="protocol-list">
+                        {% for protocol, count in stats.protocol_counts.items() %}
+                        <li>
+                            <span class="protocol-name">{{ protocol }}</span>
+                            <span class="protocol-count">{{ count }} packets</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 style="color: #2c3e50; margin-bottom: 15px;">Most Active IPs:</h3>
+                    <ul class="ip-list">
+                        {% for ip, count in stats.top_ips.items() %}
+                        <li>
+                            <span class="ip-address">{{ ip }}</span>
+                            <span class="ip-count">{{ count }} packets</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Network Analytics Dashboard - Real-time traffic monitoring and analysis</p>
+        </div>
+    </div>
+</body>
+</html>
